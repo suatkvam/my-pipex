@@ -5,7 +5,7 @@ OBJ_DIR = obj
 LIBFT_DIR = libft
 FT_PRINTF_DIR = ft_printf
 
-PARSER_SRC = formatted_path.c free_formatted_path.c
+PARSER_SRC = formatted_path.c free_path.c find_command.c
 
 SRCS = $(addprefix parse/, $(PARSER_SRC)) \
     main.c
