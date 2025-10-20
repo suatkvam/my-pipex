@@ -32,10 +32,7 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 	pipeline->outfile_fd = open_file(outfile, O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
 	if (pipeline->infile_fd < 0)
-	{
 		ft_err_printf("Error: Could not open input file.\n");
-		exit(0);
-	}
 	if (pipeline->outfile_fd < 0)
 	{
 		ft_err_printf("Error: Could not open output file.\n");

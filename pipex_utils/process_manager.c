@@ -3,10 +3,11 @@
 #include "pipex.h"
 #include "pipex_utils.h"
 #include "stdlib.h"
+#include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-void	check_command_or_exit(t_exec *cmd)
+void	check_command_or_exit(t_exec *cmd, t_pipeline *pipeline)
 {
 	if (!cmd->path || !cmd->args || !cmd->args[0] || !cmd->args[0][0])
 	{
@@ -14,6 +15,7 @@ void	check_command_or_exit(t_exec *cmd)
 		free_path(cmd->args);
 		if (cmd->path)
 			free(cmd->path);
+		free_pipeline(pipeline);
 		exit(127);
 	}
 }
@@ -21,11 +23,22 @@ void	check_command_or_exit(t_exec *cmd)
 void	exec_command_child(t_pipeline *pipe_data, int i)
 {
 	int	j;
+	int	devnull;
 
 	j = 0;
-	check_command_or_exit(&pipe_data->commands[i]);
+	check_command_or_exit(&pipe_data->commands[i], pipe_data);
+	// infile_fd < 0 ise stdin'i /dev/null'a yönlendir
 	if (i == 0)
-		dup2(pipe_data->infile_fd, STDIN_FILENO);
+	{
+		if (pipe_data->infile_fd < 0)
+		{
+			devnull = open("/dev/null", O_RDONLY);
+			dup2(devnull, STDIN_FILENO);
+			close(devnull);
+		}
+		else
+			dup2(pipe_data->infile_fd, STDIN_FILENO);
+	}
 	else
 		dup2(pipe_data->pipes[i - 1][0], STDIN_FILENO);
 	if (i == pipe_data->cmd_count - 1)
@@ -40,10 +53,8 @@ void	exec_command_child(t_pipeline *pipe_data, int i)
 	}
 	execve(pipe_data->commands[i].path, pipe_data->commands[i].args,
 		pipe_data->envp);
-	free_path(pipe_data->commands[i].args);
-	if (pipe_data->commands[i].path)
-		free(pipe_data->commands[i].path);
 	ft_err_printf("Error: execve failed.\n");
+	free_pipeline(pipe_data);
 	exit(127);
 }
 
@@ -77,18 +88,20 @@ pid_t	spawn_all_children(t_pipeline *pipe_data)
 int	wait_for_children(pid_t last_pid, int cmd_count)
 {
 	int		status;
+	int		last_status;
 	int		i;
 	pid_t	wpid;
-	int		last_status;
 
 	last_status = 0;
 	i = 0;
 	while (i < cmd_count)
 	{
-		wpid = waitpid(-1, &status, 0);
+		wpid = wait(&status);
 		if (wpid == last_pid)
 			last_status = status;
 		i++;
 	}
-	return (last_status >> 8);
+	if (WIFEXITED(last_status))
+		return (WEXITSTATUS(last_status));
+	return (1);
 }
