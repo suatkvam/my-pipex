@@ -18,8 +18,8 @@ static char	*get_paths(char const *envp[])
 
 char	**paths_formatter(char const *envp[])
 {
-	char **splited_path;
-	char *path;
+	char	**splited_path;
+	char	*path;
 
 	path = get_paths(envp);
 	if (!path)

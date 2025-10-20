@@ -8,19 +8,27 @@
 
 void	free_pipeline(t_pipeline *pipeline)
 {
+	int	i;
+
 	if (!pipeline || !pipeline->commands)
 		return ;
-	for (int i = 0; i < pipeline->cmd_count; i++)
+	i = 0;
+	while (i < pipeline->cmd_count)
 	{
 		free_path(pipeline->commands[i].args);
 		if (pipeline->commands[i].path)
 			free(pipeline->commands[i].path);
+		i++;
 	}
 	free(pipeline->commands);
 	if (pipeline->pipes)
 	{
-		for (int i = 0; i < pipeline->cmd_count - 1; i++)
+		i = 0;
+		while (i < pipeline->cmd_count - 1)
+		{
 			free(pipeline->pipes[i]);
+			i++;
+		}
 		free(pipeline->pipes);
 	}
 }
@@ -42,31 +50,29 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 
 // todo: yerel dizindeki programları çalıştırmalı
 void	setup_commands(t_pipeline *pipeline, char const *argv[],
-        char const *envp[])
+		char const *envp[])
 {
-    char	**paths;
-    int		perm_denied;
+	char	**paths;
+	int		perm_denied;
 
-    paths = paths_formatter(envp);
-    pipeline->commands = malloc(sizeof(t_exec) * pipeline->cmd_count);
-    if (!pipeline->commands)
-    {
-        ft_err_printf("Error: Memory allocation failed.\n");
-        exit(1);
-    }
-    pipeline->commands[0].args = ft_split(argv[2], ' ');
-    pipeline->commands[1].args = ft_split(argv[3], ' ');
-
-    pipeline->commands[0].path = find_command(paths,
-            pipeline->commands[0].args[0], &perm_denied);
-    pipeline->commands[0].permission = perm_denied;
-
-    pipeline->commands[1].path = find_command(paths,
-            pipeline->commands[1].args[0], &perm_denied);
-    pipeline->commands[1].permission = perm_denied;
-
-    free_path(paths);
+	paths = paths_formatter(envp);
+	pipeline->commands = malloc(sizeof(t_exec) * pipeline->cmd_count);
+	if (!pipeline->commands)
+	{
+		ft_err_printf("Error: Memory allocation failed.\n");
+		exit(1);
+	}
+	pipeline->commands[0].args = ft_split(argv[2], ' ');
+	pipeline->commands[1].args = ft_split(argv[3], ' ');
+	pipeline->commands[0].path = find_command(paths,
+			pipeline->commands[0].args[0], &perm_denied);
+	pipeline->commands[0].permission = perm_denied;
+	pipeline->commands[1].path = find_command(paths,
+			pipeline->commands[1].args[0], &perm_denied);
+	pipeline->commands[1].permission = perm_denied;
+	free_path(paths);
 }
+
 int	main(int argc, char const *argv[], char const *envp[])
 {
 	t_pipeline	pipeline;
