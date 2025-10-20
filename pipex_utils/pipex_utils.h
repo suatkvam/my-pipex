@@ -13,9 +13,10 @@ typedef struct s_pipeline
 	char *const *envp;
 }			t_pipeline;
 
+void		check_command_or_exit(t_exec *cmd);
+pid_t		spawn_all_children(t_pipeline *pipe_data);
+int			wait_for_children(pid_t last_pid, int cmd_count);
 int			create_pipes(int ***pipes, int n);
 void		exec_command_child(t_pipeline *pipe_data, int i);
-void		spawn_all_children(t_pipeline *pipe_data);
-int			manage_pipeline(t_pipeline *pipe_data);
 
 #endif

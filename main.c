@@ -24,10 +24,50 @@ void	free_pipeline(t_pipeline *pipeline)
 		free(pipeline->pipes);
 	}
 }
+
+void	open_in_out_files(t_pipeline *pipeline, char const *infile,
+		char const *outfile)
+{
+	pipeline->infile_fd = open_file(infile, O_RDONLY, 0);
+	pipeline->outfile_fd = open_file(outfile, O_WRONLY | O_CREAT | O_TRUNC,
+			0644);
+	if (pipeline->infile_fd < 0)
+	{
+		ft_err_printf("Error: Could not open input file.\n");
+		exit(0);
+	}
+	if (pipeline->outfile_fd < 0)
+	{
+		ft_err_printf("Error: Could not open output file.\n");
+		exit(1);
+	}
+}
+
+void	setup_commands(t_pipeline *pipeline, char const *argv[],
+		char const *envp[])
+{
+	char	**paths;
+
+	paths = paths_formatter(envp);
+	pipeline->commands = malloc(sizeof(t_exec) * pipeline->cmd_count);
+	if (!pipeline->commands)
+	{
+		ft_err_printf("Error: Memory allocation failed.\n");
+		exit(1);
+	}
+	pipeline->commands[0].args = ft_split(argv[2], ' ');
+	pipeline->commands[1].args = ft_split(argv[3], ' ');
+	pipeline->commands[0].path = find_command(paths,
+			pipeline->commands[0].args[0]);
+	pipeline->commands[1].path = find_command(paths,
+			pipeline->commands[1].args[0]);
+	free_path(paths);
+}
 int	main(int argc, char const *argv[], char const *envp[])
 {
 	t_pipeline	pipeline;
-	char		**paths;
+	pid_t		last_pid;
+	int			exit_status;
 
 	if (argc != 5)
 	{
@@ -38,45 +78,15 @@ int	main(int argc, char const *argv[], char const *envp[])
 	}
 	pipeline.cmd_count = 2;
 	pipeline.envp = (char *const *)envp;
-	pipeline.infile_fd = open_file(argv[1], O_RDONLY, 0);
-	pipeline.outfile_fd = open_file(argv[4], O_WRONLY | O_CREAT | O_TRUNC,
-			0644);
-	if (pipeline.infile_fd < 0 || pipeline.outfile_fd < 0)
-	{
-		ft_err_printf("Error: Could not open input/output file.\n");
-		exit(1);
-	}
-	pipeline.commands = malloc(sizeof(t_exec) * pipeline.cmd_count);
-	if (!pipeline.commands)
-	{
-		ft_err_printf("Error: Memory allocation failed.\n");
-		exit(1);
-	}
-	paths = paths_formatter(envp);
-	pipeline.commands[0].args = ft_split(argv[2], ' ');
-	pipeline.commands[1].args = ft_split(argv[3], ' ');
-	pipeline.commands[0].path = find_command(paths,
-			pipeline.commands[0].args[0]);
-	pipeline.commands[1].path = find_command(paths,
-			pipeline.commands[1].args[0]);
-	free_path(paths);
-	// --- PIPE OLUŞTURMA ---
+	open_in_out_files(&pipeline, argv[1], argv[4]);
+	setup_commands(&pipeline, argv, envp);
 	if (create_pipes(&pipeline.pipes, pipeline.cmd_count - 1) != 0)
 	{
 		free_pipeline(&pipeline);
 		exit(1);
 	}
-	// ----------------------
-	if (pipeline.commands[0].path)
-		ft_printf("cmd1 path: %s\n", pipeline.commands[0].path); // debug
-	if (pipeline.commands[1].path)
-		ft_printf("cmd2 path: %s\n", pipeline.commands[1].path); // debug
-	if (manage_pipeline(&pipeline) != 0)
-	{
-		ft_err_printf("Error: Pipeline execution failed.\n");
-		free_pipeline(&pipeline);
-		exit(1);
-	}
+	last_pid = spawn_all_children(&pipeline);
+	exit_status = wait_for_children(last_pid, pipeline.cmd_count);
 	free_pipeline(&pipeline);
-	return (0);
+	return (exit_status);
 }
