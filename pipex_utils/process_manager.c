@@ -3,6 +3,7 @@
 #include "pipex.h"
 #include "pipex_utils.h"
 #include "stdlib.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -11,6 +12,12 @@ void	check_command_or_exit(t_exec *cmd, t_pipeline *pipeline)
 {
 	if (!cmd->path || !cmd->args || !cmd->args[0] || !cmd->args[0][0])
 	{
+		if (errno == EACCES)
+		{
+			ft_err_printf("Permission denied: %s\n", cmd->args[0]);
+			free_pipeline(pipeline);
+			exit(126);
+		}
 		ft_err_printf("command not found: %s\n", cmd->args[0]);
 		free_pipeline(pipeline);
 		exit(127);
@@ -50,6 +57,13 @@ void	exec_command_child(t_pipeline *pipe_data, int i)
 	}
 	execve(pipe_data->commands[i].path, pipe_data->commands[i].args,
 		pipe_data->envp);
+	if (errno == EACCES)
+	{
+		ft_err_printf("Permission denied: %s\n",
+			pipe_data->commands[i].args[0]);
+		free_pipeline(pipe_data);
+		exit(126);
+	}
 	ft_err_printf("Error: execve failed.\n");
 	free_pipeline(pipe_data);
 	exit(127);

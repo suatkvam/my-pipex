@@ -40,6 +40,7 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 	}
 }
 
+// todo: yerel dizindeki programları çalıştırmalı
 void	setup_commands(t_pipeline *pipeline, char const *argv[],
 		char const *envp[])
 {
