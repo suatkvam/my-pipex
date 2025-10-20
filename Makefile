@@ -22,7 +22,7 @@ FT_PRINTF_FLAGS = -L$(FT_PRINTF_DIR) -lftprintf
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 INCLUDE_FLAGS = -I. -I./libft -I./ft_printf -I./parse -I./pipex_utils
-CFLAGS += -g3
+CFLAGS += -g -g3
 CFLAGS += $(INCLUDE_FLAGS)
 
 RM = rm -f

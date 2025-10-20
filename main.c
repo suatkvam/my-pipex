@@ -39,7 +39,7 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 	if (pipeline->outfile_fd < 0)
 	{
 		ft_err_printf("Error: Could not open output file.\n");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 

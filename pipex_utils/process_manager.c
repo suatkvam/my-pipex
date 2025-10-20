@@ -85,7 +85,7 @@ int	wait_for_children(pid_t last_pid, int cmd_count)
 	i = 0;
 	while (i < cmd_count)
 	{
-		wpid = wait(&status);
+		wpid = waitpid(-1, &status, 0);
 		if (wpid == last_pid)
 			last_status = status;
 		i++;
