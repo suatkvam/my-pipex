@@ -12,9 +12,6 @@ void	check_command_or_exit(t_exec *cmd, t_pipeline *pipeline)
 	if (!cmd->path || !cmd->args || !cmd->args[0] || !cmd->args[0][0])
 	{
 		ft_err_printf("command not found: %s\n", cmd->args[0]);
-		free_path(cmd->args);
-		if (cmd->path)
-			free(cmd->path);
 		free_pipeline(pipeline);
 		exit(127);
 	}
