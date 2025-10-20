@@ -5,29 +5,22 @@
 #include "unistd.h"
 #include <errno.h>
 
-#include "libft.h"
-#include "parser.h"
-#include "printf.h"
-#include "stdlib.h"
-#include "unistd.h"
-#include <errno.h>
-
-char	*find_command(char **paths, const char *cmd)
+char	*find_command(char **paths, const char *cmd, int *permission_denied)
 {
     char *full_path;
     size_t len;
     int i;
 
+    *permission_denied = 0;
     if (!cmd)
         return (NULL);
-    // Eğer cmd bir yol içeriyorsa (örn. ./a veya /usr/bin/ls)
     if (ft_strchr(cmd, '/'))
     {
         if (access(cmd, X_OK) == 0)
             return (ft_strdup(cmd));
         else if (access(cmd, F_OK) == 0 && access(cmd, X_OK) == -1)
         {
-            errno = EACCES;
+            *permission_denied = 1;
             return (NULL);
         }
         return (NULL);
@@ -49,7 +42,7 @@ char	*find_command(char **paths, const char *cmd)
         else if (access(full_path, F_OK) == 0 && access(full_path, X_OK) == -1)
         {
             free(full_path);
-            errno = EACCES;
+            *permission_denied = 1;
             return (NULL);
         }
         free(full_path);

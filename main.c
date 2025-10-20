@@ -42,24 +42,30 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 
 // todo: yerel dizindeki programları çalıştırmalı
 void	setup_commands(t_pipeline *pipeline, char const *argv[],
-		char const *envp[])
+        char const *envp[])
 {
-	char	**paths;
+    char	**paths;
+    int		perm_denied;
 
-	paths = paths_formatter(envp);
-	pipeline->commands = malloc(sizeof(t_exec) * pipeline->cmd_count);
-	if (!pipeline->commands)
-	{
-		ft_err_printf("Error: Memory allocation failed.\n");
-		exit(1);
-	}
-	pipeline->commands[0].args = ft_split(argv[2], ' ');
-	pipeline->commands[1].args = ft_split(argv[3], ' ');
-	pipeline->commands[0].path = find_command(paths,
-			pipeline->commands[0].args[0]);
-	pipeline->commands[1].path = find_command(paths,
-			pipeline->commands[1].args[0]);
-	free_path(paths);
+    paths = paths_formatter(envp);
+    pipeline->commands = malloc(sizeof(t_exec) * pipeline->cmd_count);
+    if (!pipeline->commands)
+    {
+        ft_err_printf("Error: Memory allocation failed.\n");
+        exit(1);
+    }
+    pipeline->commands[0].args = ft_split(argv[2], ' ');
+    pipeline->commands[1].args = ft_split(argv[3], ' ');
+
+    pipeline->commands[0].path = find_command(paths,
+            pipeline->commands[0].args[0], &perm_denied);
+    pipeline->commands[0].permission = perm_denied;
+
+    pipeline->commands[1].path = find_command(paths,
+            pipeline->commands[1].args[0], &perm_denied);
+    pipeline->commands[1].permission = perm_denied;
+
+    free_path(paths);
 }
 int	main(int argc, char const *argv[], char const *envp[])
 {

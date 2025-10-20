@@ -10,18 +10,18 @@
 
 void	check_command_or_exit(t_exec *cmd, t_pipeline *pipeline)
 {
-	if (!cmd->path || !cmd->args || !cmd->args[0] || !cmd->args[0][0])
-	{
-		if (errno == EACCES)
-		{
-			ft_err_printf("Permission denied: %s\n", cmd->args[0]);
-			free_pipeline(pipeline);
-			exit(126);
-		}
-		ft_err_printf("command not found: %s\n", cmd->args[0]);
-		free_pipeline(pipeline);
-		exit(127);
-	}
+    if (!cmd->path || !cmd->args || !cmd->args[0] || !cmd->args[0][0])
+    {
+        if (cmd->permission)
+        {
+            ft_err_printf("Permission denied: %s\n", cmd->args[0]);
+            free_pipeline(pipeline);
+            exit(126);
+        }
+        ft_err_printf("command not found: %s\n", cmd->args[0]);
+        free_pipeline(pipeline);
+        exit(127);
+    }
 }
 
 void	exec_command_child(t_pipeline *pipe_data, int i)
