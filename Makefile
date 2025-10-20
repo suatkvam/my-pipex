@@ -5,10 +5,12 @@ OBJ_DIR = obj
 LIBFT_DIR = libft
 FT_PRINTF_DIR = ft_printf
 
-PARSER_SRC = formatted_path.c free_path.c find_command.c
+PIPEX_UTILS = create_pipes.c process_manager.c
+PARSER_SRC = formatted_path.c free_path.c find_command.c open_file.c
 
-SRCS = $(addprefix parse/, $(PARSER_SRC)) \
-    main.c
+SRCS = $(addprefix pipex_utils/, $(PIPEX_UTILS)) \
+       $(addprefix parse/, $(PARSER_SRC)) \
+       main.c
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
@@ -19,7 +21,7 @@ FT_PRINTF_FLAGS = -L$(FT_PRINTF_DIR) -lftprintf
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-INCLUDE_FLAGS = -I./libft -I./ft_printf -I./parse
+INCLUDE_FLAGS = -I. -I./libft -I./ft_printf -I./parse -I./pipex_utils
 CFLAGS += -g3
 CFLAGS += $(INCLUDE_FLAGS)
 
@@ -42,7 +44,7 @@ $(LIBFT_LIB):
 	@make -s -C $(LIBFT_DIR)
 
 $(FT_PRINTF_LIB):
-	@echo "Building ft_printf..."
+	@echo "Building ft_printf..."""
 	@make -s -C $(FT_PRINTF_DIR)
 
 clean:
