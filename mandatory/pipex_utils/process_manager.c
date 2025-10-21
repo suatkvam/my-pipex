@@ -41,6 +41,11 @@ int	wait_for_children(pid_t last_pid, int cmd_count)
 	while (i < cmd_count)
 	{
 		wpid = waitpid(-1, &status, 0);
+		if (wpid == -1)
+		{
+			ft_err_printf("Error: waitpid failed.\n");
+			return (1);
+		}
 		if (wpid == last_pid)
 			last_status = status;
 		i++;

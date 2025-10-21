@@ -23,13 +23,15 @@ void	check_command_or_exit(t_exec *cmd, t_pipeline *pipeline)
 	}
 }
 
-static void	setup_child_fds(t_pipeline *pipe_data, int i)
+static void	setup_child_fds(t_pipeline *pipe_data, int i, int here_doc)
 {
 	int	devnull;
 
 	if (i == 0)
 	{
-		if (pipe_data->infile_fd < 0)
+		if (here_doc)
+			dup2(pipe_data->infile_fd, STDIN_FILENO);
+		else if (pipe_data->infile_fd < 0)
 		{
 			devnull = open("/dev/null", O_RDONLY);
 			dup2(devnull, STDIN_FILENO);
@@ -59,10 +61,10 @@ static void	close_all_pipes(t_pipeline *pipe_data)
 	}
 }
 
-void	exec_command_child(t_pipeline *pipe_data, int i)
+void	exec_command_child(t_pipeline *pipe_data, int i, int here_doc)
 {
 	check_command_or_exit(&pipe_data->commands[i], pipe_data);
-	setup_child_fds(pipe_data, i);
+	setup_child_fds(pipe_data, i, here_doc);
 	close_all_pipes(pipe_data);
 	execve(pipe_data->commands[i].path, pipe_data->commands[i].args,
 		pipe_data->envp);
