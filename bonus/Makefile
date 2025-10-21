@@ -1,4 +1,4 @@
-NAME = pipex_bonus
+NAME = pipex
 
 OBJ_DIR = obj
 
@@ -10,6 +10,8 @@ PARSER_SRC = formatted_path.c free_path.c find_command.c open_file.c
 
 SRCS = $(addprefix pipex_utils/, $(PIPEX_UTILS)) \
        $(addprefix parse/, $(PARSER_SRC)) \
+		get-next-line/get_next_line_bonus.c \
+		get-next-line/get_next_line_utils_bonus.c \
        main.c
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
@@ -21,7 +23,7 @@ FT_PRINTF_FLAGS = -L$(FT_PRINTF_DIR) -lftprintf
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-INCLUDE_FLAGS = -I. -I./libft -I./ft_printf -I./parse -I./pipex_utils
+INCLUDE_FLAGS = -I. -I./libft -I./ft_printf -I./parse -I./pipex_utils -I./get_next_line
 CFLAGS += -g -g3
 CFLAGS += $(INCLUDE_FLAGS)
 
