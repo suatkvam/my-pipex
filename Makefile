@@ -5,7 +5,7 @@ OBJ_DIR = obj
 LIBFT_DIR = libft
 FT_PRINTF_DIR = ft_printf
 
-PIPEX_UTILS = create_pipes.c process_manager.c
+PIPEX_UTILS = create_pipes.c process_manager.c free_pipeline.c child_utils.c
 PARSER_SRC = formatted_path.c free_path.c find_command.c open_file.c
 
 SRCS = $(addprefix pipex_utils/, $(PIPEX_UTILS)) \

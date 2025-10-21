@@ -6,33 +6,6 @@
 #include "pipex_utils.h"
 #include "unistd.h"
 
-void	free_pipeline(t_pipeline *pipeline)
-{
-	int	i;
-
-	if (!pipeline || !pipeline->commands)
-		return ;
-	i = 0;
-	while (i < pipeline->cmd_count)
-	{
-		free_path(pipeline->commands[i].args);
-		if (pipeline->commands[i].path)
-			free(pipeline->commands[i].path);
-		i++;
-	}
-	free(pipeline->commands);
-	if (pipeline->pipes)
-	{
-		i = 0;
-		while (i < pipeline->cmd_count - 1)
-		{
-			free(pipeline->pipes[i]);
-			i++;
-		}
-		free(pipeline->pipes);
-	}
-}
-
 void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 		char const *outfile)
 {
@@ -48,7 +21,6 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 	}
 }
 
-// todo: yerel dizindeki programları çalıştırmalı
 void	setup_commands(t_pipeline *pipeline, char const *argv[],
 		char const *envp[])
 {

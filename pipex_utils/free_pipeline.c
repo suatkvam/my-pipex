@@ -1,5 +1,6 @@
 #include "pipex_utils.h"
 #include "stdlib.h"
+#include "parser.h"
 
 void	free_pipeline(t_pipeline *pipeline)
 {

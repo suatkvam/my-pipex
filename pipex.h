@@ -9,6 +9,5 @@ typedef struct s_exec
 }			t_exec;
 
 typedef struct s_pipeline	t_pipeline;
-void			free_pipeline(t_pipeline *pipeline);
 
 #endif
