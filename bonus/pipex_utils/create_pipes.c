@@ -16,18 +16,12 @@ static void	free_pipes_on_err(int ***pipes, int n)
 	free((*pipes));
 }
 
-int	create_pipes(int ***pipes, int n)
+static int	allocate_and_create_pipes(int ***pipes, int n)
 {
 	int	i;
 
-	*pipes = malloc(sizeof(int *) * n);
-	if (!*pipes)
-	{
-		ft_err_printf("Error: memory allocation failed for pipes.\n");
-		return (1);
-	}
 	i = -1;
-	while (++i < n) // TODO: bu dışarı çıkacak
+	while (++i < n)
 	{
 		(*pipes)[i] = malloc(sizeof(int) * 2);
 		if (!(*pipes)[i])
@@ -43,5 +37,18 @@ int	create_pipes(int ***pipes, int n)
 			return (1);
 		}
 	}
+	return (0);
+}
+
+int	create_pipes(int ***pipes, int n)
+{
+	*pipes = malloc(sizeof(int *) * n);
+	if (!*pipes)
+	{
+		ft_err_printf("Error: memory allocation failed for pipes.\n");
+		return (1);
+	}
+	if (allocate_and_create_pipes(pipes, n) != 0)
+		return (1);
 	return (0);
 }

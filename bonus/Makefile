@@ -12,6 +12,9 @@ SRCS = $(addprefix pipex_utils/, $(PIPEX_UTILS)) \
        $(addprefix parse/, $(PARSER_SRC)) \
 		get-next-line/get_next_line_bonus.c \
 		get-next-line/get_next_line_utils_bonus.c \
+		file_utils.c \
+		setup_pipeline.c \
+		here_doc.c \
        main.c
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
@@ -30,6 +33,8 @@ CFLAGS += $(INCLUDE_FLAGS)
 RM = rm -f
 
 all: $(NAME)
+
+bonus: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT_LIB) $(FT_PRINTF_LIB)
 	@echo "Linking $(NAME)..."

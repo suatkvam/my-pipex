@@ -1,5 +1,6 @@
 #include "pipex_utils.h"
 #include <sys/wait.h>
+#include "../ft_printf/printf.h"
 #include <unistd.h>
 
 pid_t	spawn_all_children(t_pipeline *pipe_data)

@@ -3,15 +3,13 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-pid_t	spawn_all_children(t_pipeline *pipe_data, int here_doc)
+static void	spawn_children(t_pipeline *pipe_data, int here_doc, pid_t *last_pid)
 {
-	pid_t	last_pid;
 	int		i;
 	pid_t	pid;
 
-	last_pid = -1;
 	i = 0;
-	while (i < pipe_data->cmd_count) // bu ve diğer while da dışarı çıkarılacak
+	while (i < pipe_data->cmd_count)
 	{
 		pid = fork();
 		if (pid < 0)
@@ -23,9 +21,15 @@ pid_t	spawn_all_children(t_pipeline *pipe_data, int here_doc)
 		if (pid == 0)
 			exec_command_child(pipe_data, i, here_doc);
 		if (i == pipe_data->cmd_count - 1)
-			last_pid = pid;
+			*last_pid = pid;
 		i++;
 	}
+}
+
+static void	close_pipes(t_pipeline *pipe_data)
+{
+	int	i;
+
 	i = 0;
 	while (i < pipe_data->cmd_count - 1)
 	{
@@ -33,6 +37,15 @@ pid_t	spawn_all_children(t_pipeline *pipe_data, int here_doc)
 		close(pipe_data->pipes[i][1]);
 		i++;
 	}
+}
+
+pid_t	spawn_all_children(t_pipeline *pipe_data, int here_doc)
+{
+	pid_t	last_pid;
+
+	last_pid = -1;
+	spawn_children(pipe_data, here_doc, &last_pid);
+	close_pipes(pipe_data);
 	return (last_pid);
 }
 
