@@ -5,15 +5,15 @@
 # include <sys/types.h>
 # include <unistd.h>
 
-void		open_in_out_files(t_pipeline *pipeline, char const *infile,
-				char const *outfile, int here_doc);
-void		setup_pipeline(t_pipeline *pipeline, char const *argv[],
-				char const *envp[], int here_doc);
-void		setup_here_doc(char const *limitter);
-pid_t		spawn_all_children(t_pipeline *pipe_data, int here_doc);
-void		exec_command_child(t_pipeline *pipe_data, int i, int here_doc);
-int			create_pipes(int ***pipes, int n);
-int			wait_for_children(pid_t last_pid, int cmd_count);
-void		free_pipeline(t_pipeline *pipeline);
+void	open_in_out_files(t_pipeline *pipeline, char const *infile,
+			char const *outfile, int here_doc);
+void	setup_pipeline(t_pipeline *pipeline, char const *argv[],
+			char const *envp[], int here_doc);
+void	setup_here_doc(char const *limitter);
+pid_t	spawn_all_children(t_pipeline *pipe_data, int here_doc);
+void	exec_command_child(t_pipeline *pipe_data, int i, int here_doc);
+int		create_pipes(int ***pipes, int n);
+int		wait_for_children(pid_t last_pid, int cmd_count);
+void	free_pipeline(t_pipeline *pipeline);
 
 #endif
