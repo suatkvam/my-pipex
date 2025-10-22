@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:00 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/22 12:55:51 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 18:48:55 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,13 @@ void	setup_commands(t_pipeline *pipeline, char const *argv[],
 	free_path(paths);
 }
 
-int	main(int argc, char const *argv[], char const *envp[])
+static void	init_pipeline(t_pipeline *pipeline, int argc, char const *argv[],
+		char const *envp[])
 {
-	t_pipeline	pipeline;
-	pid_t		last_pid;
-	int			exit_status;
-
-	pipeline.commands = NULL;
-	pipeline.pipes = NULL;
-	pipeline.infile_fd = -1;
-	pipeline.outfile_fd = -1;
+	pipeline->commands = NULL;
+	pipeline->pipes = NULL;
+	pipeline->infile_fd = -1;
+	pipeline->outfile_fd = -1;
 	if (argc != 5)
 	{
 		ft_err_printf("Error: Invalid number of arguments.\n");
@@ -78,19 +75,27 @@ int	main(int argc, char const *argv[], char const *envp[])
 		ft_printf("Example: %s file1 \"ls -l\" \"wc -l\" file2\n", argv[0]);
 		exit(1);
 	}
-	pipeline.cmd_count = 2;
-	pipeline.envp = (char *const *)envp;
+	pipeline->cmd_count = 2;
+	pipeline->envp = (char *const *)envp;
+}
+
+int	main(int argc, char const *argv[], char const *envp[])
+{
+	t_pipeline	pipeline;
+	pid_t		last_pid;
+	int			exit_status;
+
+	init_pipeline(&pipeline, argc, argv, envp);
 	if (open_in_out_files(&pipeline, argv[1], argv[4]) != 0)
 	{
 		free_pipeline(&pipeline);
 		exit(EXIT_FAILURE);
 	}
-	open_in_out_files(&pipeline, argv[1], argv[4]);
 	setup_commands(&pipeline, argv, envp);
 	if (create_pipes(&pipeline.pipes, pipeline.cmd_count - 1) != 0)
 	{
 		free_pipeline(&pipeline);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	last_pid = spawn_all_children(&pipeline);
 	exit_status = wait_for_children(last_pid, pipeline.cmd_count);
