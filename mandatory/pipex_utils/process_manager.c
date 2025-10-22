@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:07 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:08 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 17:50:51 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,26 +44,36 @@ pid_t	spawn_all_children(t_pipeline *pipe_data)
 
 int	wait_for_children(pid_t last_pid, int cmd_count)
 {
-	int		status;
-	int		last_status;
-	int		i;
-	pid_t	wpid;
+    int		status;
+    int		last_status;
+    int		nonzero_status;
+    int		i;
+    pid_t	wpid;
 
-	last_status = 0;
-	i = 0;
-	while (i < cmd_count)
-	{
-		wpid = waitpid(-1, &status, 0);
-		if (wpid == -1)
-		{
-			ft_err_printf("Error: waitpid failed.\n");
-			return (1);
-		}
-		if (wpid == last_pid)
-			last_status = status;
-		i++;
-	}
-	if (WIFEXITED(last_status))
-		return (WEXITSTATUS(last_status));
-	return (1);
+    last_status = 0;
+    nonzero_status = 0;
+    i = 0;
+    while (i < cmd_count)
+    {
+        wpid = waitpid(-1, &status, 0);
+        if (wpid == -1)
+        {
+            ft_err_printf("Error: waitpid failed.\n");
+            return (1);
+        }
+        /* capture any non-zero exit status (prefer to return it) */
+        if (WIFEXITED(status))
+        {
+            if (WEXITSTATUS(status) != 0)
+                nonzero_status = WEXITSTATUS(status);
+        }
+        if (wpid == last_pid)
+            last_status = status;
+        i++;
+    }
+    if (nonzero_status != 0)
+        return (nonzero_status);
+    if (WIFEXITED(last_status))
+        return (WEXITSTATUS(last_status));
+    return (1);
 }

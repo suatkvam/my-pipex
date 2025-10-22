@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:00 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:01 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 12:55:51 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,23 @@
 #include "pipex_utils.h"
 #include "unistd.h"
 
-void	open_in_out_files(t_pipeline *pipeline, char const *infile,
+int	open_in_out_files(t_pipeline *pipeline, char const *infile,
 		char const *outfile)
 {
 	pipeline->infile_fd = open_file(infile, O_RDONLY, 0);
 	pipeline->outfile_fd = open_file(outfile, O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
 	if (pipeline->infile_fd < 0)
+	{
 		ft_err_printf("Error: Could not open input file.\n");
+		return (-1);
+	}
 	if (pipeline->outfile_fd < 0)
 	{
 		ft_err_printf("Error: Could not open output file.\n");
-		exit(EXIT_FAILURE);
+		return (-1);
 	}
+	return (0);
 }
 
 void	setup_commands(t_pipeline *pipeline, char const *argv[],
@@ -63,6 +67,10 @@ int	main(int argc, char const *argv[], char const *envp[])
 	pid_t		last_pid;
 	int			exit_status;
 
+	pipeline.commands = NULL;
+	pipeline.pipes = NULL;
+	pipeline.infile_fd = -1;
+	pipeline.outfile_fd = -1;
 	if (argc != 5)
 	{
 		ft_err_printf("Error: Invalid number of arguments.\n");
@@ -72,6 +80,11 @@ int	main(int argc, char const *argv[], char const *envp[])
 	}
 	pipeline.cmd_count = 2;
 	pipeline.envp = (char *const *)envp;
+	if (open_in_out_files(&pipeline, argv[1], argv[4]) != 0)
+	{
+		free_pipeline(&pipeline);
+		exit(EXIT_FAILURE);
+	}
 	open_in_out_files(&pipeline, argv[1], argv[4]);
 	setup_commands(&pipeline, argv, envp);
 	if (create_pipes(&pipeline.pipes, pipeline.cmd_count - 1) != 0)

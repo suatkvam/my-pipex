@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:42 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:43 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 12:58:18 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include "pipex.h"
 #include <stdlib.h>
 
-void	setup_pipeline(t_pipeline *pipeline, char const *argv[],
-		char const *envp[], int here_doc)
+int	setup_pipeline(t_pipeline *pipeline, char const *argv[], char const *envp[],
+		int here_doc)
 {
 	char	**paths;
 	int		permision;
@@ -28,7 +28,8 @@ void	setup_pipeline(t_pipeline *pipeline, char const *argv[],
 	if (!pipeline->commands)
 	{
 		ft_err_printf("Error: Memory allocation failed.\n");
-		exit(1);
+		free_path(paths);
+		return (-1);
 	}
 	i = -1;
 	while (++i < pipeline->cmd_count)
@@ -39,4 +40,5 @@ void	setup_pipeline(t_pipeline *pipeline, char const *argv[],
 		pipeline->commands[i].permission = permision;
 	}
 	free_path(paths);
+	return (0);
 }

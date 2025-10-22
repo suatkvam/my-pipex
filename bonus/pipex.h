@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:45 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:58:23 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 13:00:01 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ typedef struct s_pipeline
 	char *const	*envp;
 }				t_pipeline;
 
-void		open_in_out_files(t_pipeline *pipeline, char const *infile,
+int		open_in_out_files(t_pipeline *pipeline, char const *infile,
 				char const *outfile, int here_doc);
-void		setup_pipeline(t_pipeline *pipeline, char const *argv[],
+int		setup_pipeline(t_pipeline *pipeline, char const *argv[],
 				char const *envp[], int here_doc);
 void		setup_here_doc(char const *limitter);
 
