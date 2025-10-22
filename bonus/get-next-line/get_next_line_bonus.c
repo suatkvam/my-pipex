@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 16:02:50 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:03:32 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 12:44:10 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ static char	*read_line(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash[1024];
+	static char	*stash[8192];
 	char		*line;
 	int			i;
 
-	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= 8192 || BUFFER_SIZE <= 0)
 	{
 		i = 0;
-		while (i < 1024)
+		while (i < 8192)
 		{
 			if (stash[i])
 			{

@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:58 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:55:03 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 12:51:27 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,5 @@ int	main(int argc, char const *argv[], char const *envp[])
 	last_pid = spawn_all_children(&pipeline, here_doc);
 	exit_status = wait_for_children(last_pid, pipeline.cmd_count);
 	free_pipeline(&pipeline);
-	if (here_doc)
-		unlink(".here_doc_temp");
 	return (exit_status);
 }

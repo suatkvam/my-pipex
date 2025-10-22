@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:51:09 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:51:10 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 12:49:14 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	open_in_out_files(t_pipeline *pipeline, char const *infile,
 	if (here_doc)
 	{
 		pipeline->infile_fd = open(".here_doc_temp", O_RDONLY);
+		unlink(".here_doc_temp");
 		pipeline->outfile_fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND,
 				0644);
 	}
