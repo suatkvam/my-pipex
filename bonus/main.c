@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:58 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/22 12:51:27 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 22:34:17 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,24 @@ static void	initialize_pipeline(t_pipeline *pipeline, int argc,
 		char const *argv[], char const *envp[])
 {
 	int	here_doc;
+	int	ret;
 
+	pipeline->commands = NULL;
+	pipeline->pipes = NULL;
+	pipeline->infile_fd = -1;
+	pipeline->outfile_fd = -1;
 	here_doc = is_here_doc(argv[1]);
 	pipeline->cmd_count = argc - 3 - here_doc;
 	pipeline->envp = (char *const *)envp;
 	if (here_doc)
 		setup_here_doc(argv[2]);
-	open_in_out_files(pipeline, argv[1], argv[argc - 1], here_doc);
+	ret = open_in_out_files(pipeline, argv[1], argv[argc - 1], here_doc);
+	if (ret != 0)
+	{
+		free_pipeline(pipeline);
+		ft_err_printf("Error: Failed to open files. Exiting.\n");
+		exit(EXIT_FAILURE);
+	}
 	setup_pipeline(pipeline, argv, envp, here_doc);
 	if (create_pipes(&pipeline->pipes, pipeline->cmd_count - 1) != 0)
 	{

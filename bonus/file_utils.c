@@ -6,15 +6,18 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:51:09 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/22 19:11:13 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 22:37:06 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf/printf.h"
 #include "parser.h"
 #include "pipex.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 static int	open_here_doc_files(t_pipeline *pipeline, char const *outfile)
@@ -53,12 +56,13 @@ int	open_in_out_files(t_pipeline *pipeline, char const *infile,
 		return (-1);
 	if (pipeline->infile_fd < 0)
 	{
-		ft_err_printf("Error: Could not open input file.\n");
-		return (-1);
+		ft_err_printf("Warning: Could not open input file.\
+			 Child will handle it.\n");
 	}
 	if (pipeline->outfile_fd < 0)
 	{
-		ft_err_printf("Error: Could not open output file.\n");
+		ft_err_printf("Error: Could not open output file '%s' (errno=%d: %s)\n",
+			outfile, errno, strerror(errno));
 		return (-1);
 	}
 	return (0);

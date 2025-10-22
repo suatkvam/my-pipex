@@ -6,12 +6,13 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:51:13 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/22 19:07:49 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 20:57:21 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ft_printf/printf.h"
 #include "pipex_utils.h"
+#include <errno.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -65,44 +66,39 @@ static int	collect_children_statuses(int cmd_count, pid_t last_pid,
 		int *last_status)
 {
 	int		status;
-	int		nonzero_status;
 	int		i;
 	pid_t	wpid;
 
 	*last_status = 0;
-	nonzero_status = 0;
-	i = -1;
-	while (++i < cmd_count)
+	i = 0;
+	while (i < cmd_count)
 	{
 		wpid = waitpid(-1, &status, 0);
 		if (wpid == -1)
 		{
+			if (errno == EINTR)
+				continue ;
 			ft_err_printf("Error: waitpid failed.\n");
 			return (-1);
 		}
-		if (WIFEXITED(status))
-		{
-			if (WEXITSTATUS(status) != 0)
-				nonzero_status = WEXITSTATUS(status);
-		}
 		if (wpid == last_pid)
 			*last_status = status;
+		i++;
 	}
-	return (nonzero_status);
+	return (0);
 }
 
 int	wait_for_children(pid_t last_pid, int cmd_count)
 {
 	int	last_status;
-	int	nonzero_status;
+	int	ret;
 
-	nonzero_status = collect_children_statuses(cmd_count, last_pid,
-			&last_status);
-	if (nonzero_status == -1)
+	ret = collect_children_statuses(cmd_count, last_pid, &last_status);
+	if (ret == -1)
 		return (1);
-	if (nonzero_status != 0)
-		return (nonzero_status);
 	if (WIFEXITED(last_status))
 		return (WEXITSTATUS(last_status));
+	if (WIFSIGNALED(last_status))
+		return (128 + WTERMSIG(last_status));
 	return (1);
 }

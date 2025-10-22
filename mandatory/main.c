@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:00 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/22 18:48:55 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/22 22:41:28 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int	open_in_out_files(t_pipeline *pipeline, char const *infile,
 			0644);
 	if (pipeline->infile_fd < 0)
 	{
-		ft_err_printf("Error: Could not open input file.\n");
-		return (-1);
+		ft_err_printf("Warning: Could not open input file. Child \
+			will handle it.\n");
 	}
 	if (pipeline->outfile_fd < 0)
 	{
