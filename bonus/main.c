@@ -6,18 +6,18 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:58 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/22 22:34:17 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/23 15:02:53 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./ft_printf/printf.h"
 #include "./get-next-line/get_next_line_bonus.h"
-#include "fcntl.h"
 #include "libft.h"
 #include "parser.h"
 #include "pipex.h"
 #include "pipex_utils.h"
-#include "unistd.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 int	is_here_doc(char const *arg)
 {

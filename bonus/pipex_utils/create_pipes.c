@@ -6,14 +6,14 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:51:21 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 19:54:16 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/23 15:02:27 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include "printf.h"
-#include "unistd.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 static void	free_pipes_on_err(int ***pipes, int n)
 {
