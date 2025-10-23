@@ -6,16 +6,14 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:38 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:39 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/23 14:31:55 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "parser.h"
-#include "printf.h"
-#include "stdlib.h"
-#include "unistd.h"
-#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 static char	*find_command_in_paths(char **paths, const char *cmd,
 		int *permission_denied)

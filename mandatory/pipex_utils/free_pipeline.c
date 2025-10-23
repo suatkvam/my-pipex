@@ -6,13 +6,13 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:18 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:19 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/23 14:32:54 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_utils.h"
-#include "stdlib.h"
 #include "parser.h"
+#include "pipex_utils.h"
+#include <stdlib.h>
 
 void	free_pipeline(t_pipeline *pipeline)
 {

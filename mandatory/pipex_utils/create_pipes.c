@@ -6,12 +6,12 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:21 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:22 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/23 14:32:58 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../ft_printf/printf.h"
 #include "pipex.h"
-#include "printf.h"
 #include "unistd.h"
 #include <stdlib.h>
 

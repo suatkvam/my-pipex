@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:15 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:16 by akivam           ###   ########.fr       */
+/*   Updated: 2025/10/23 14:33:02 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,5 @@ int			wait_for_children(pid_t last_pid, int cmd_count);
 int			create_pipes(int ***pipes, int n);
 void		exec_command_child(t_pipeline *pipe_data, int i);
 void		free_pipeline(t_pipeline *pipeline);
-void		exec_command_child(t_pipeline *pipe_data, int i);
-void		check_command_or_exit(t_exec *cmd, t_pipeline *pipeline);
 
 #endif
