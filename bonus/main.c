@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:58 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/23 15:02:53 by akivam           ###   ########.fr       */
+/*   Updated: 2025/11/13 17:13:47 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ static void	initialize_pipeline(t_pipeline *pipeline, int argc,
 	ret = open_in_out_files(pipeline, argv[1], argv[argc - 1], here_doc);
 	if (ret != 0)
 	{
+		if (pipeline->infile_fd >= 0)
+			close(pipeline->infile_fd);
+		if (pipeline->outfile_fd >= 0)
+			close(pipeline->outfile_fd);
 		free_pipeline(pipeline);
 		ft_err_printf("Error: Failed to open files. Exiting.\n");
 		exit(EXIT_FAILURE);
@@ -61,7 +65,8 @@ int	main(int argc, char const *argv[], char const *envp[])
 	int			exit_status;
 	int			here_doc;
 
-	if (argc < 5)
+	here_doc = (argc > 1 && is_here_doc(argv[1]));
+	if ((here_doc && argc < 6) || (!here_doc && argc < 5))
 	{
 		ft_err_printf("Error: Invalid number of arguments.\n");
 		ft_printf("Usage: %s infile cmd1 cmd2 ... outfile\n", argv[0]);
@@ -70,7 +75,6 @@ int	main(int argc, char const *argv[], char const *envp[])
 		exit(1);
 	}
 	initialize_pipeline(&pipeline, argc, argv, envp);
-	here_doc = is_here_doc(argv[1]);
 	last_pid = spawn_all_children(&pipeline, here_doc);
 	exit_status = wait_for_children(last_pid, pipeline.cmd_count);
 	free_pipeline(&pipeline);

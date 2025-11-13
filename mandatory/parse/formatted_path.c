@@ -6,17 +6,18 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:35 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:50:36 by akivam           ###   ########.fr       */
+/*   Updated: 2025/11/13 17:13:47 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <unistd.h>
 
 static char	*get_paths(char const *envp[])
 {
 	int	i;
 
-	if (!envp)
+	if (!envp || !*envp)
 		return (NULL);
 	i = 0;
 	while (envp[i])

@@ -18,7 +18,13 @@ void	free_pipeline(t_pipeline *pipeline)
 {
 	int	i;
 
-	if (!pipeline || !pipeline->commands)
+	if (!pipeline)
+		return ;
+	if (pipeline->infile_fd >= 0)
+		close(pipeline->infile_fd);
+	if (pipeline->outfile_fd >= 0)
+		close(pipeline->outfile_fd);
+	if (!pipeline->commands)
 		return ;
 	i = 0;
 	while (i < pipeline->cmd_count)

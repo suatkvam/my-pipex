@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:51:37 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/21 18:51:38 by akivam           ###   ########.fr       */
+/*   Updated: 2025/11/13 17:13:46 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*get_paths(char const *envp[])
 {
 	int	i;
 
-	if (!envp)
+	if (!envp || !*envp)
 		return (NULL);
 	i = 0;
 	while (envp[i])

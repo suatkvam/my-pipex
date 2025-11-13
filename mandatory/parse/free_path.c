@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:32 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/23 14:31:12 by akivam           ###   ########.fr       */
+/*   Updated: 2025/11/13 17:13:41 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	free_path(char **path)
 {
 	int	i;
 
+	if (!path)
+		return ;
 	i = 0;
 	while (path[i])
 	{

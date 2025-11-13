@@ -6,7 +6,7 @@
 /*   By: akivam <akivam@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:50:00 by akivam            #+#    #+#             */
-/*   Updated: 2025/10/23 14:33:23 by akivam           ###   ########.fr       */
+/*   Updated: 2025/11/13 17:04:33 by akivam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,10 @@ int	main(int argc, char const *argv[], char const *envp[])
 	init_pipeline(&pipeline, argc, argv, envp);
 	if (open_in_out_files(&pipeline, argv[1], argv[4]) != 0)
 	{
+		if (pipeline.infile_fd >= 0)
+			close(pipeline.infile_fd);
+		if (pipeline.outfile_fd >= 0)
+			close(pipeline.outfile_fd);
 		free_pipeline(&pipeline);
 		exit(EXIT_FAILURE);
 	}
